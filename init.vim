@@ -15,7 +15,6 @@ Plug 'vim-autoformat/vim-autoformat'
 Plug 'moll/vim-bbye'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kshenoy/vim-signature'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mg979/vim-visual-multi'
@@ -43,6 +42,7 @@ set smartcase
 set smarttab
 set hlsearch
 set incsearch
+set expandtab
 
 set history=1000
 set undolevels=1000
