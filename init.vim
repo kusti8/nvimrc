@@ -1,7 +1,6 @@
 call plug#begin()
 Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'sonph/onehalf', {'rtp': 'vim' }
-Plug 'dense-analysis/ale'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -43,6 +42,7 @@ set smartcase
 set smarttab
 set hlsearch
 set incsearch
+set expandtab
 
 set history=1000
 set undolevels=1000
@@ -83,6 +83,9 @@ nmap <leader>q :Bdelete<cr>
 nmap <F3> :Autoformat<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <leader>v :Vista coc<cr>
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+vnoremap <leader>p "_dP
 
 set ignorecase
 
@@ -121,3 +124,5 @@ if &term =~ '^xterm' || &term =~ '^tmux'
     autocmd VimLeave * silent !echo -ne "\e[5 q"
   augroup END
 endif
+
+autocmd FileType systemverilog setlocal shiftwidth=2 softtabstop=2 expandtab

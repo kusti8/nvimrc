@@ -1,0 +1,8 @@
+{
+	"languageserver": {
+			"veridian": {
+					"command": "veridian",
+					"filetypes": ["verilog", "systemverilog"]
+			}
+	}
+}
