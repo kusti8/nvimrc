@@ -85,6 +85,7 @@ nmap <leader>v :Vista coc<cr>
 nnoremap <leader>d "_d
 vnoremap <leader>d "_d
 vnoremap <leader>p "_dP
+nnoremap <silent> z. :<C-u>normal! zszH<CR>
 
 set ignorecase
 
