@@ -18,6 +18,7 @@ Plug 'kshenoy/vim-signature'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mg979/vim-visual-multi'
 Plug 'liuchengxu/vista.vim'
+Plug 'ojroques/vim-oscyank'
 call plug#end()
 
 filetype plugin indent on
@@ -65,7 +66,7 @@ source ~/.config/nvim/coc.vim
 " nnoremap <Leader>b :ls<CR>:b<Space>
 
 set nostartofline
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 set autowrite
 set autowriteall
@@ -86,6 +87,7 @@ nnoremap <leader>d "_d
 vnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 nnoremap <silent> z. :<C-u>normal! zszH<CR>
+vnoremap <leader>c :OSCYank<CR>
 
 set ignorecase
 
