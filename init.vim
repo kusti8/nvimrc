@@ -87,7 +87,6 @@ nnoremap <leader>d "_d
 vnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 nnoremap <silent> z. :<C-u>normal! zszH<CR>
-vnoremap <leader>c :OSCYank<CR>
 
 set ignorecase
 
@@ -128,3 +127,4 @@ if &term =~ '^xterm' || &term =~ '^tmux'
 endif
 
 autocmd FileType systemverilog setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYankReg " | endif
