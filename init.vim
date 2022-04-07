@@ -167,3 +167,4 @@ let g:rainbow_conf = {
 \		},
 \	}
 \}
+let g:sml_auto_create_def_use='always'
