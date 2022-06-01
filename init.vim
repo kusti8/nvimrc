@@ -20,6 +20,7 @@ Plug 'mg979/vim-visual-multi'
 Plug 'liuchengxu/vista.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'jez/vim-better-sml'
+Plug 'ggandor/leap.nvim'
 call plug#end()
 
 filetype plugin indent on
@@ -168,3 +169,4 @@ let g:rainbow_conf = {
 \	}
 \}
 let g:sml_auto_create_def_use='always'
+lua require('leap').set_default_keymaps()
