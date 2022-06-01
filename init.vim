@@ -23,6 +23,8 @@ Plug 'jez/vim-better-sml'
 Plug 'ggandor/leap.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'machakann/vim-sandwich'
+Plug 'folke/which-key.nvim'
+Plug 'wellle/targets.vim'
 call plug#end()
 
 filetype plugin indent on
@@ -171,9 +173,16 @@ let g:rainbow_conf = {
 \	}
 \}
 let g:sml_auto_create_def_use='always'
-lua require('leap').set_default_keymaps()
+" lua require('leap').set_default_keymaps()
 lua require('gitsigns').setup()
 nmap f <Plug>(leap-forward)
 vmap f <Plug>(leap-forward)
 nmap F <Plug>(leap-backward)
 vmap F <Plug>(leap-backward)
+lua << EOF
+  require("which-key").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+EOF
