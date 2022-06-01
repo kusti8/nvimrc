@@ -21,6 +21,8 @@ Plug 'liuchengxu/vista.vim'
 Plug 'ojroques/vim-oscyank'
 Plug 'jez/vim-better-sml'
 Plug 'ggandor/leap.nvim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'machakann/vim-sandwich'
 call plug#end()
 
 filetype plugin indent on
@@ -170,3 +172,4 @@ let g:rainbow_conf = {
 \}
 let g:sml_auto_create_def_use='always'
 lua require('leap').set_default_keymaps()
+lua require('gitsigns').setup()
