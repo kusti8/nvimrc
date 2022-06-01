@@ -97,8 +97,8 @@ if [ ! -d $HOME/.nvm ]; then
 fi
 export NVM_DIR="$HOME/.nvm"
 source "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm install --no-progress node
-nvm use node
+nvm install --no-progress --default v16.15.0
+nvm use v16.15.0
 npm i -g yarn
 
 if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
