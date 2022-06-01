@@ -53,8 +53,8 @@ mkdir -p $HOME/.config/nvim
 cp -r ./!(.git) $HOME/.config/nvim
 
 mkdir -p $HOME/bin
-if [[ $PATH == ?(*:)$HOME/bin?(:*) ]]; then
-  echo "PATH already contains bin"
+if [[ $PATH == $HOME/bin?(:*) ]]; then
+  echo "PATH already contains bin and is first"
 else
     echo "export PATH=$HOME/bin:\$PATH" >> $HOME/.bashrc
 fi
@@ -70,7 +70,7 @@ fi
 curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
 chmod +x $HOME/bin/tmux
 ln -s $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
-lang=$(locale | grep LANGUAGE | cut -d= -f2 | cut -d_ -f1)
+lang=$(locale | grep LANG | cut -d= -f2)
 if (echo $lang | grep -iqF utf-8) || (echo $lang | grep -iqF utf8); then
     echo "Already has utf8"
 else
