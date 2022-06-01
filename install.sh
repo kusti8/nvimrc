@@ -69,7 +69,7 @@ fi
 
 curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
 chmod +x $HOME/bin/tmux
-ln -s $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
+ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
 lang=$(locale | grep LANG | cut -d= -f2)
 if (echo $lang | grep -iqF utf-8) || (echo $lang | grep -iqF utf8); then
     echo "Already has utf8"

@@ -173,3 +173,7 @@ let g:rainbow_conf = {
 let g:sml_auto_create_def_use='always'
 lua require('leap').set_default_keymaps()
 lua require('gitsigns').setup()
+nmap f <Plug>(leap-forward)
+vmap f <Plug>(leap-forward)
+nmap F <Plug>(leap-backward)
+vmap F <Plug>(leap-backward)
