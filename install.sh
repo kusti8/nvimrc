@@ -92,6 +92,11 @@ source ~/.fzf.bash
 curl -fLo $HOME/bin/rg $RELEASE_URL/rg
 chmod +x $HOME/bin/rg
 
+curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
+chmod +x $HOME/bin/lazygit
+mkdir -p $HOME/.config/lazygit
+ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
+
 if [ ! -d $HOME/.nvm ]; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 fi
