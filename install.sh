@@ -54,6 +54,10 @@ fi
 mkdir -p $HOME/.config/nvim
 cp -r ./!(.git) $HOME/.config/nvim
 
+if [ ! -f $HOME/.bash_profile ]; then
+    echo ". \$HOME/.bashrc" >> $HOME/.bash_profile
+fi
+
 mkdir -p $HOME/bin
 if [[ $PATH == $HOME/bin?(:*) ]]; then
   echo "PATH already contains bin and is first"
