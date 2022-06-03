@@ -3,18 +3,18 @@ Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lock
 Plug 'sonph/onehalf', {'rtp': 'vim' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'luochen1990/rainbow'
 Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'vim-autoformat/vim-autoformat'
 Plug 'moll/vim-bbye'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-Plug 'kshenoy/vim-signature'
+" Plug 'kshenoy/vim-signature'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'mg979/vim-visual-multi'
 Plug 'liuchengxu/vista.vim'
@@ -25,6 +25,12 @@ Plug 'lewis6991/gitsigns.nvim'
 Plug 'machakann/vim-sandwich'
 Plug 'folke/which-key.nvim'
 Plug 'wellle/targets.vim'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'fannheyward/telescope-coc.nvim'
+Plug 'sudormrfbin/cheatsheet.nvim'
 call plug#end()
 
 filetype plugin indent on
@@ -50,8 +56,10 @@ set hlsearch
 set incsearch
 set expandtab
 
-set history=1000
-set undolevels=1000
+set history=10000
+set undolevels=10000
+set undodir=~/.config/nvim/undodir
+set undofile
 
 set pastetoggle=<F2>
 
@@ -69,6 +77,8 @@ let g:airline_theme='onehalfdark'
 
 source ~/.config/nvim/coc.vim
 
+set signcolumn=auto
+
 " nnoremap <Leader>b :ls<CR>:b<Space>
 
 set nostartofline
@@ -80,12 +90,15 @@ set autowriteall
 nmap <leader>sv :vsplit<cr>
 nmap <leader>sh :split<cr>
 
-nmap <leader>1 :NERDTreeToggle<cr>
-nmap <leader>b :Buffers<cr>
-nmap <leader>m :Marks<cr>
-nmap <leader>s :Lines<cr>
-nmap <leader>sb :BLines<cr>
+nmap <leader>1 :NvimTreeToggle<cr>
+nmap <leader>b <cmd>Telescope buffers<cr>
+nnoremap <c-p> <cmd>Telescope find_files<cr>
+nmap <leader>g <cmd>Telescope live_grep<cr>
+nmap <leader>m <cmd>Telescope marks<cr>
+nmap <leader>cr <cmd>Telescope coc references<cr>
 nmap <leader>q :Bdelete<cr>
+nmap <leader>cs <cmd>Telescope coc workspace_symbols<cr>
+nmap <leader>c <cmd>Telescope coc<cr>
 nmap <F3> :Autoformat<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <leader>v :Vista coc<cr>
@@ -105,8 +118,7 @@ if exists('+termguicolors')
   set termguicolors
 endif
 
-set rtp+=~/.fzf
-nnoremap <c-p> :Files<cr>
+" set rtp+=~/.fzf
 
 if &term =~ '^xterm' || &term =~ '^tmux'
   " Cursor in terminal:
@@ -173,8 +185,48 @@ let g:rainbow_conf = {
 \	}
 \}
 let g:sml_auto_create_def_use='always'
-" lua require('leap').set_default_keymaps()
-lua require('gitsigns').setup()
+lua << EOF
+require('gitsigns').setup{
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+
+    -- Navigation
+    map('n', ']c', function()
+      if vim.wo.diff then return ']c' end
+      vim.schedule(function() gs.next_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    map('n', '[c', function()
+      if vim.wo.diff then return '[c' end
+      vim.schedule(function() gs.prev_hunk() end)
+      return '<Ignore>'
+    end, {expr=true})
+
+    -- Actions
+    map({'n', 'v'}, '<leader>hs', ':Gitsigns stage_hunk<CR>')
+    map({'n', 'v'}, '<leader>hr', ':Gitsigns reset_hunk<CR>')
+    map('n', '<leader>hS', gs.stage_buffer)
+    map('n', '<leader>hu', gs.undo_stage_hunk)
+    map('n', '<leader>hR', gs.reset_buffer)
+    map('n', '<leader>hp', gs.preview_hunk)
+    map('n', '<leader>hb', function() gs.blame_line{full=true} end)
+    map('n', '<leader>tb', gs.toggle_current_line_blame)
+    map('n', '<leader>hd', gs.diffthis)
+    map('n', '<leader>hD', function() gs.diffthis('~') end)
+    map('n', '<leader>td', gs.toggle_deleted)
+
+    -- Text object
+    map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end
+}
+EOF
 nmap f <Plug>(leap-forward)
 vmap f <Plug>(leap-forward)
 nmap F <Plug>(leap-backward)
@@ -186,3 +238,5 @@ lua << EOF
     -- refer to the configuration section below
   }
 EOF
+lua require('telescope').load_extension('coc')
+lua require'nvim-tree'.setup {}

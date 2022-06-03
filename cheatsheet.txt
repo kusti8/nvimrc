@@ -1,0 +1,105 @@
+## telescope-me @fzf @find
+See open buffers                                        | <leader>b
+Find files to open                                      | <c-p>
+Search (grep) the entire folder                         | <leader>g
+Show all marks                                          | <leader>m
+Show (search) references (use) of variable (using coc)  | <leader>cr
+Search all symbols in workspace (using coc)             | <leader>cs
+Open up telescope coc menu                              | <leader>c
+
+## code-actions @coc @lsp @autocomplete @intellisense
+Jump to definition of function (using coc)              | gd
+See symbols on the side (using coc)                     | <leader>v
+See type definition of symbol (using coc)               | gy
+See implementation of definition (using coc)            | gi
+Show documentation in new window (using coc)            | K
+Rename symbol (using coc)                               | <leader>rn
+Format selected code                                    | <leader>f
+Apply code action to selection (like <leader>ap)        | <leader>a
+Apply code action to entire file                        | <leader>ac
+Scroll floating coc windows                             | <c-f> or <c-p>
+
+## navigating @view
+Center horizontally (like zz)                           | z.
+Open up NERD Tree file browser                          | <leader>1
+
+## inserting @writing @editing
+Go into paste mode (for no indents)                     | <F2>
+Delete without copying                                  | <leader>d
+Paste without copying                                   | <leader>p
+
+## commentary @commenting
+Toggle comment out something                            | gc
+
+## tree @filebrowser @files
+Open a file or folder                                   | o
+Open a file or folder (no window picker)                | O
+Edit file in place, replacing tree pane with file       | <c-e>
+Change directory (cd) into the selected directory       | <c-]>
+Open file in a vertical split (ensure unmapped in term) | <c-v>
+Open file in a horizontal split                         | <c-x>
+Open file in new tab                                    | <c-t>
+Move cursor to the parent directory                     | P
+Close current open directory                            | <backspace>
+Open file as a preview (keep cursor in tree)            | <tab>
+Navigate to first sibling of current file               | K
+Navigate to last sibling of current file                | J
+Toggle gitignore visibility                             | I
+Toggle dotfile visibility                               | H
+Refresh the file tree                                   | R
+Create a file or a directory (with last /)              | a
+Delete a file                                           | d
+Rename a file                                           | r
+Fully rename file (clear current filename)              | <c-r>
+Cut clipboard file/directory                            | x
+Copy file/directory                                     | c
+Paste file from clipboard                               | p
+Copy name to the clipboard                              | y
+Copy relative path to clipboard                         | Y
+Copy absolute path to clipboard                         | gy
+Go to parent directory                                  | -
+Open a file with default sys application                | s
+Live filter based on regex                              | f
+Clear live filter                                       | F
+Collapse entire tree                                    | W
+Expand the entire tree                                  | E
+Search or navigate to path                              | S
+Get file info under cursor                              | <c-k>
+Execute vim command on file/folder                      | .
+
+## bbye @buffer-close
+Close buffer in the current split                       | <leader>q
+
+## visual-multi @multi-select
+Select multi visual words                               | <c-n>
+
+## leap @quick-nav
+Smart search to next occurance (two character search)   | f
+Smart search to prev occurance (two character search)   | F
+
+## gitsigns
+Navigate to next change (hunk)                          | ]c
+Navigate to prev change (hunk)                          | [c
+Stage current hunk                                      | <leader>hs
+Reset current hunk                                      | <leader>hr
+Stage the entire buffer                                 | <leader>hS
+Undo staging a hunk                                     | <leader>hu
+Reset the current buffer                                | <leader>hR
+Preview the diff of the current hunk                    | <leader>hp
+Git blame the entire line                               | <leader>hb
+Toggle the current line git blame                       | <leader>tb
+Git diff the buffer                                     | <leader>hd
+Git diff commit before last                             | <leader>hD
+Git show deleted markers                                | <leader>td
+
+## targets @pair
+Select in pair of characters (right between chars)      | i<pair>
+Select pair including pair chars                        | a<pair>
+Select in pair (excluding whitespace)                   | I<pair>
+Select around pair, including following whitespace      | A<pair>
+Work on next pair                                       | <in/around>n<pair>
+Work on prev pair                                       | <in/around>l<pair>
+Pair targets                                            | (){}[]<>
+Quote targets                                           | '"t`
+Separator targets                                       | , . ; : + -   = ~ _ * # / | \ & $
+Argument targets                                        | a

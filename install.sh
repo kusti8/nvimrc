@@ -40,6 +40,8 @@ handleFuse () {
 checkCommand curl
 checkCommand git
 checkCommand unzip
+checkCommand make
+checkCommand gcc
 
 HAS_FUSE=1
 if ! command -v fusermount &> /dev/null
@@ -97,6 +99,9 @@ chmod +x $HOME/bin/lazygit
 mkdir -p $HOME/.config/lazygit
 ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
 
+curl -fLo $HOME/bin/fd $RELEASE_URL/fd
+chmod +x $HOME/bin/fd
+
 if [ ! -d $HOME/.nvm ]; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 fi
@@ -125,5 +130,6 @@ rm $HOME/.poshthemes/themes.zip
 addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
 
 yarn cache clean
+npm cache clean --force
 
 echo "Now run source ~/.bashrc"
