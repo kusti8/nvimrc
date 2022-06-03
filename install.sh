@@ -39,7 +39,6 @@ handleFuse () {
 
 checkCommand curl
 checkCommand git
-checkCommand unzip
 checkCommand make
 checkCommand gcc
 
@@ -126,10 +125,10 @@ fi
 curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
 chmod +x $HOME/bin/oh-my-posh
 mkdir -p $HOME/.poshthemes
-curl -fLo $HOME/.poshthemes/themes.zip https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip
-unzip -o -q $HOME/.poshthemes/themes.zip -d $HOME/.poshthemes
+curl -fLo $HOME/.poshthemes/themes.tar.gz $RELEASE_URL/themes.tar.gz
+tar xf $HOME/.poshthemes/themes.tar.gz -C $HOME/.poshthemes
 chmod u+rw $HOME/.poshthemes/*.json
-rm $HOME/.poshthemes/themes.zip
+rm $HOME/.poshthemes/themes.tar.gz
 
 addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
 
