@@ -57,6 +57,9 @@ if [ ! -f $HOME/.bash_profile ]; then
     echo ". \$HOME/.bashrc" >> $HOME/.bash_profile
 fi
 
+# ALIASES
+addIfNotExist "alias lg='lazygit'" "$HOME/.bashrc"
+
 mkdir -p $HOME/bin
 if [[ $PATH == $HOME/bin?(:*) ]]; then
   echo "PATH already contains bin and is first"
