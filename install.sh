@@ -117,6 +117,7 @@ nvm install --no-progress --default v16.15.0
 nvm use v16.15.0
 npm i -g yarn
 
+rm -rf $HOME/.local/share/nvim/plugged
 if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
     sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
