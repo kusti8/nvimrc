@@ -31,6 +31,8 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'fannheyward/telescope-coc.nvim'
 Plug 'sudormrfbin/cheatsheet.nvim'
+
+Plug 'sheerun/vim-polyglot'
 call plug#end()
 
 filetype plugin indent on
