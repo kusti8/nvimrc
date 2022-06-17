@@ -239,4 +239,13 @@ lua << EOF
   }
 EOF
 lua require('telescope').load_extension('coc')
-lua require'nvim-tree'.setup {}
+lua << EOF
+    require'nvim-tree'.setup {
+        actions = {
+            change_dir = {
+                enable = true,
+                global = true
+            }
+        }
+    }
+EOF
