@@ -140,3 +140,4 @@ yarn cache clean
 npm cache clean --force
 
 echo "Now run source ~/.bashrc"
+echo "Also remember to do :Copilot setup"

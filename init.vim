@@ -33,6 +33,7 @@ Plug 'fannheyward/telescope-coc.nvim'
 Plug 'sudormrfbin/cheatsheet.nvim'
 
 Plug 'sheerun/vim-polyglot'
+Plug 'github/copilot.vim'
 call plug#end()
 
 filetype plugin indent on
