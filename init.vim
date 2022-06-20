@@ -110,6 +110,9 @@ vnoremap <leader>d "_d
 vnoremap <leader>p "_dP
 nnoremap <silent> z. :<C-u>normal! zszH<CR>
 
+imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
 set ignorecase
 
 let g:rainbow_active = 1

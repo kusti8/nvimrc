@@ -18,6 +18,7 @@ Format selected code                                    | <leader>f
 Apply code action to selection (like <leader>ap)        | <leader>a
 Apply code action to entire file                        | <leader>ac
 Scroll floating coc windows                             | <c-f> or <c-p>
+Accept copilot suggestion                               | <c-j>
 
 ## navigating @view
 Center horizontally (like zz)                           | z.
