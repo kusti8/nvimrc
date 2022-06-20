@@ -10,7 +10,7 @@
 shopt -s extglob
 
 RELEASE_URL="https://github.com/kusti8/nvimrc/releases/download/v0.0.1"
-extensions="coc-clangd coc-pyright coc-json coc-docker"
+extensions="coc-clangd coc-pyright coc-json coc-docker coc-sh"
 
 checkCommand () {
     if ! command -v $1 &> /dev/null
