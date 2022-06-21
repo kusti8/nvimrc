@@ -15,8 +15,6 @@ Plug 'fannheyward/telescope-coc.nvim'
 " Status line
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Onehalf airline theme
-Plug 'sonph/onehalf', {'rtp': 'vim' }
 " File icons
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 " Rainbow brackets
@@ -26,9 +24,13 @@ Plug 'nathanaelkane/vim-indent-guides'
 " Hybrid and absolute line number change
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Show tmux line at bottom
-Plug 'edkolev/tmuxline.vim'
+" Plug 'edkolev/tmuxline.vim'
 " Show git signs at the left
 Plug 'lewis6991/gitsigns.nvim'
+" Allow tmux and vim to be in same line
+Plug 'vimpostor/vim-tpipeline'
+" Add nord theme
+Plug 'arcticicestudio/nord-vim'
 
 " Editing
 " Commenting functions (gc)
@@ -49,6 +51,9 @@ Plug 'sudormrfbin/cheatsheet.nvim'
 Plug 'wellle/targets.vim'
 " Unhighlight things when search ends
 Plug 'romainl/vim-cool'
+" Use folding/collapse things
+Plug 'kevinhwang91/promise-async'
+Plug 'kevinhwang91/nvim-ufo'
 
 " Multi-file
 " Show file tree

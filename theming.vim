@@ -4,16 +4,20 @@ set number relativenumber
 " set width of signs (like git) to auto
 set signcolumn=auto
 
+" set only one status bar for all vim
+set laststatus=3
+
+set cmdheight=0
+
 " set number of colors in terminal
 set t_Co=256
 " highlight the current line
 set cursorline
 " use onehalf theme
-colorscheme onehalfdark
+colorscheme nord
 " use airline in tmux
 let g:airline#extensions#tabline#enabled = 1
-" set airline theme
-let g:airline_theme='onehalfdark'
+let g:airline_theme='nord_minimal'
 " only show filename in titlebar
 let g:airline#extensions#tabline#fnamemod = ':t'
 
