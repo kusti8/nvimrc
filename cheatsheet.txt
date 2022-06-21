@@ -104,3 +104,15 @@ Pair targets                                            | (){}[]<>
 Quote targets                                           | '"t`
 Separator targets                                       | , . ; : + -   = ~ _ * # / | \ & $
 Argument targets                                        | a
+
+## tmux @pane @window
+Open tmux-fzf                                           | <prefix>F
+Restore current session                                 | <prefix><c-r>
+Fullsize current pane                                   | <prefix>z
+Switch to named window                                  | <prefix><c-w>
+
+## floaterm @floating @terminal
+Open floating terminal                                  | <leader>tc
+Toggle floating terminal                                | <leader>tt
+Go to next floating terminal                            | <leader>tn
+Go to previous floating terminal                        | <leader>tp

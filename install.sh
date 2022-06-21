@@ -8,6 +8,7 @@
 # }
 # trap 'failure ${LINENO} "$BASH_COMMAND"' ERR
 shopt -s extglob
+shopt -s dotglob
 
 RELEASE_URL="https://github.com/kusti8/nvimrc/releases/download/v0.0.1"
 extensions="coc-clangd coc-pyright coc-json coc-docker coc-sh"
@@ -51,7 +52,7 @@ fi
 
 
 mkdir -p $HOME/.config/nvim
-cp -r ./!(.git) $HOME/.config/nvim
+find . -type f -not -path '*/.git/*' -exec cp '{}' "$HOME/.config/nvim/{}" \;
 
 if [ ! -f $HOME/.bash_profile ]; then
     echo ". \$HOME/.bashrc" >> $HOME/.bash_profile
@@ -59,6 +60,9 @@ fi
 
 # ALIASES
 addIfNotExist "alias lg='lazygit'" "$HOME/.bashrc"
+addIfNotExist "alias tm='tmux new -t'" "$HOME/.bashrc"
+addIfNotExist "alias tma='tmux attach -t'" "$HOME/.bashrc"
+addIfNotExist "alias tml='tmux list'" "$HOME/.bashrc"
 
 mkdir -p $HOME/bin
 if [[ $PATH == $HOME/bin?(:*) ]]; then
@@ -77,6 +81,7 @@ fi
 
 curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
 chmod +x $HOME/bin/tmux
+rm -f $HOME/.tmux.conf
 ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
 lang=$(locale | grep LANG | cut -d= -f2)
 if (echo $lang | grep -iqF utf-8) || (echo $lang | grep -iqF utf8); then
@@ -97,6 +102,10 @@ git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
 $HOME/.fzf/install --all
 source ~/.fzf.bash
 
+git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+~/.tmux/plugins/tpm/scripts/install_plugins.sh
+~/.tmux/plugins/tpm/scripts/update_plugin.sh all
+
 curl -fLo $HOME/bin/rg $RELEASE_URL/rg
 chmod +x $HOME/bin/rg
 
@@ -107,6 +116,9 @@ ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
 
 curl -fLo $HOME/bin/fd $RELEASE_URL/fd
 chmod +x $HOME/bin/fd
+
+curl -fLo $HOME/bin/code-minimap $RELEASE_URL/code-minimap
+chmod +x $HOME/bin/code-minimap
 
 if [ ! -d $HOME/.nvm ]; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
