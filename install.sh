@@ -7,6 +7,7 @@
 #   echo "Failed at $lineno: $msg"
 # }
 # trap 'failure ${LINENO} "$BASH_COMMAND"' ERR
+set -e
 shopt -s extglob
 shopt -s dotglob
 
@@ -17,6 +18,15 @@ checkCommand () {
     if ! command -v $1 &> /dev/null
     then
         echo "$1 could not be found"
+        exit
+    fi
+}
+
+checkIfInUse () {
+    # Check if a file is currently being executed
+    if [ -n "$(lsof -t $1)" ]
+    then
+        echo "File $1 is in use"
         exit
     fi
 }
@@ -38,10 +48,138 @@ handleFuse () {
     popd
 }
 
+setAliases () {
+    # ALIASES
+    addIfNotExist "alias lg='lazygit'" "$HOME/.bashrc"
+    addIfNotExist "alias tm='tmux new -t'" "$HOME/.bashrc"
+    addIfNotExist "alias tma='tmux attach -t'" "$HOME/.bashrc"
+    addIfNotExist "alias tml='tmux list-sessions'" "$HOME/.bashrc"
+}
+
+prepHomeBin () {
+    mkdir -p $HOME/bin
+    if [[ $PATH == "$HOME/bin?(:*)" ]]; then
+    echo "PATH already contains bin and is first"
+    else
+        echo "export PATH=$HOME/bin:\$PATH" >> $HOME/.bashrc
+    fi
+    export PATH=$HOME/bin:$PATH
+}
+
+setUtf8() {
+    lang=$(locale | grep LANG | cut -d= -f2)
+    if (echo $lang | grep -iqF utf-8) || (echo $lang | grep -iqF utf8); then
+        echo "Already has utf8"
+    else
+        addIfNotExist 'export LANG="C.utf8"' "$HOME/.bashrc"
+        addIfNotExist 'export LC_ALL="C.utf8"' "$HOME/.bashrc"
+    fi
+}
+
+
+installNvim () {
+    curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
+    chmod +x $HOME/bin/nvim
+    addIfNotExist "alias vim='nvim'" "$HOME/.bashrc"
+    if [ $HAS_FUSE -eq 0 ]; then
+        handleFuse nvim
+    fi
+}
+
+installTmux () {
+    curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
+    chmod +x $HOME/bin/tmux
+    rm -f $HOME/.tmux.conf
+    ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
+    if [ $HAS_FUSE -eq 0 ]; then
+        handleFuse tmux
+        addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
+    fi
+    # check if git directory exists
+    if [ -d $HOME/.tmux/plugins/tpm ]; then
+        pushd $HOME/.tmux/plugins/tpm
+        git pull
+        popd
+    else
+        git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
+    fi
+    ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+    ~/.tmux/plugins/tpm/scripts/update_plugin.sh all
+}
+
+installFzf () {
+    if [ -d $HOME/.fzf ]; then
+        rm -rf $HOME/.fzf
+    fi
+    git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
+    $HOME/.fzf/install --all
+    source ~/.fzf.bash
+}
+
+installRg () {
+    curl -fLo $HOME/bin/rg $RELEASE_URL/rg
+    chmod +x $HOME/bin/rg
+}
+
+installLazygit () {
+    curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
+    chmod +x $HOME/bin/lazygit
+    mkdir -p $HOME/.config/lazygit
+    ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
+}
+
+installFd () {
+    curl -fLo $HOME/bin/fd $RELEASE_URL/fd
+    chmod +x $HOME/bin/fd
+}
+
+installCodeminimap () {
+    curl -fLo $HOME/bin/code-minimap $RELEASE_URL/code-minimap
+    chmod +x $HOME/bin/code-minimap
+}
+
+installNode () {
+    if [ ! -d $HOME/.nvm ]; then
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    fi
+    export NVM_DIR="$HOME/.nvm"
+    source "$NVM_DIR/nvm.sh"  # This loads nvm
+    nvm install --no-progress --default v16.15.0
+    nvm use v16.15.0
+    npm i -g yarn
+}
+
+installVimPlug () {
+    rm -rf $HOME/.local/share/nvim/plugged
+    if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
+        sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    fi
+
+    ~/bin/nvim --headless +PlugInstall +qall
+    ~/bin/nvim --headless --headless +"CocInstall -sync $extensions|qa"
+}
+
+installOhMyPosh () {
+    curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
+    chmod +x $HOME/bin/oh-my-posh
+    mkdir -p $HOME/.poshthemes
+    curl -fLo $HOME/.poshthemes/themes.tar.gz $RELEASE_URL/themes.tar.gz
+    tar xf $HOME/.poshthemes/themes.tar.gz -C $HOME/.poshthemes
+    chmod u+rw $HOME/.poshthemes/*.json
+    rm $HOME/.poshthemes/themes.tar.gz
+
+    addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
+}
+
+
 checkCommand curl
 checkCommand git
 checkCommand make
 checkCommand gcc
+
+checkIfInUse "$HOME/bin/tmux"
+checkIfInUse "$HOME/bin/nvim"
 
 HAS_FUSE=1
 if ! command -v fusermount &> /dev/null
@@ -50,103 +188,29 @@ then
     echo "Proceding without fuse"
 fi
 
-
+# Copy config in
 mkdir -p $HOME/.config/nvim
 find . -type f -not -path '*/.git/*' -exec cp '{}' "$HOME/.config/nvim/{}" \;
 
+# Set bashrc if its not set in bash_profile
 if [ ! -f $HOME/.bash_profile ]; then
     echo ". \$HOME/.bashrc" >> $HOME/.bash_profile
 fi
 
-# ALIASES
-addIfNotExist "alias lg='lazygit'" "$HOME/.bashrc"
-addIfNotExist "alias tm='tmux new -t'" "$HOME/.bashrc"
-addIfNotExist "alias tma='tmux attach -t'" "$HOME/.bashrc"
-addIfNotExist "alias tml='tmux list'" "$HOME/.bashrc"
 
-mkdir -p $HOME/bin
-if [[ $PATH == $HOME/bin?(:*) ]]; then
-  echo "PATH already contains bin and is first"
-else
-    echo "export PATH=$HOME/bin:\$PATH" >> $HOME/.bashrc
-fi
+setAliases
+prepHomeBin
+setUtf8
 
-curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
-chmod +x $HOME/bin/nvim
-addIfNotExist "alias vim='nvim'" "$HOME/.bashrc"
-echo $HAS_FUSE
-if [ $HAS_FUSE -eq 0 ]; then
-    handleFuse nvim
-fi
-
-curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
-chmod +x $HOME/bin/tmux
-rm -f $HOME/.tmux.conf
-ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
-lang=$(locale | grep LANG | cut -d= -f2)
-if (echo $lang | grep -iqF utf-8) || (echo $lang | grep -iqF utf8); then
-    echo "Already has utf8"
-else
-    addIfNotExist 'export LANG="C.utf8"' "$HOME/.bashrc"
-    addIfNotExist 'export LC_ALL="C.utf8"' "$HOME/.bashrc"
-fi
-if [ $HAS_FUSE -eq 0 ]; then
-    handleFuse tmux
-    addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
-fi
-
-if [ -d $HOME/.fzf ]; then
-    rm -rf $HOME/.fzf
-fi
-git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
-$HOME/.fzf/install --all
-source ~/.fzf.bash
-
-git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
-~/.tmux/plugins/tpm/scripts/install_plugins.sh
-~/.tmux/plugins/tpm/scripts/update_plugin.sh all
-
-curl -fLo $HOME/bin/rg $RELEASE_URL/rg
-chmod +x $HOME/bin/rg
-
-curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
-chmod +x $HOME/bin/lazygit
-mkdir -p $HOME/.config/lazygit
-ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
-
-curl -fLo $HOME/bin/fd $RELEASE_URL/fd
-chmod +x $HOME/bin/fd
-
-curl -fLo $HOME/bin/code-minimap $RELEASE_URL/code-minimap
-chmod +x $HOME/bin/code-minimap
-
-if [ ! -d $HOME/.nvm ]; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-fi
-export NVM_DIR="$HOME/.nvm"
-source "$NVM_DIR/nvm.sh"  # This loads nvm
-nvm install --no-progress --default v16.15.0
-nvm use v16.15.0
-npm i -g yarn
-
-rm -rf $HOME/.local/share/nvim/plugged
-if [ ! -f "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" ]; then
-    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-fi
-
-~/bin/nvim --headless +PlugInstall +qall
-~/bin/nvim --headless --headless +"CocInstall -sync $extensions|qa"
-
-curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
-chmod +x $HOME/bin/oh-my-posh
-mkdir -p $HOME/.poshthemes
-curl -fLo $HOME/.poshthemes/themes.tar.gz $RELEASE_URL/themes.tar.gz
-tar xf $HOME/.poshthemes/themes.tar.gz -C $HOME/.poshthemes
-chmod u+rw $HOME/.poshthemes/*.json
-rm $HOME/.poshthemes/themes.tar.gz
-
-addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
+installNvim
+installTmux
+installFzf
+installLazygit
+installFd
+installCodeminimap
+installNode
+installVimPlug
+installOhMyPosh
 
 yarn cache clean
 npm cache clean --force
