@@ -23,6 +23,7 @@ Accept copilot suggestion                               | <c-j>
 ## navigating @view
 Center horizontally (like zz)                           | z.
 Open up NERD Tree file browser                          | <leader>1
+Resize split                                            | <C-S-ArrowKey>
 
 ## inserting @writing @editing
 Go into paste mode (for no indents)                     | <F2>
@@ -116,3 +117,6 @@ Open floating terminal                                  | <leader>tc
 Toggle floating terminal                                | <leader>tt
 Go to next floating terminal                            | <leader>tn
 Go to previous floating terminal                        | <leader>tp
+
+## multi-file @views @panes @session
+Save layout or session                                  | <leader>p

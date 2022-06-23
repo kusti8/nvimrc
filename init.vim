@@ -62,6 +62,11 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+" Add automatic session management
+Plug 'tpope/vim-obsession'
+Plug 'dhruvasagar/vim-prosession'
+" Automatic sizing of splits
+Plug 'beauwilliams/focus.nvim'
 
 " Navigating
 " Allow jumping between vim and tmux
@@ -70,8 +75,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'ggandor/leap.nvim'
 " Use floating terminal inside vim
 Plug 'voldikss/vim-floaterm'
-" Show a minimap
-Plug 'wfxr/minimap.vim'
+" Show a scrollbar
+Plug 'dstein64/nvim-scrollview'
 
 " File specific
 " SML suppott
@@ -120,6 +125,8 @@ set ignorecase
 set smartcase
 " highlight search matches
 set hlsearch
+" allow mouse to resize splits
+set mouse=a
 
 " set command history
 set history=10000

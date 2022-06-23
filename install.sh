@@ -10,6 +10,7 @@
 set -e
 shopt -s extglob
 shopt -s dotglob
+shopt -s expand_aliases
 
 RELEASE_URL="https://github.com/kusti8/nvimrc/releases/download/v0.0.1"
 extensions="coc-clangd coc-pyright coc-json coc-docker coc-sh"
@@ -38,6 +39,11 @@ addIfNotExist () {
     fi
 }
 
+copyFiles () {
+    mkdir -p $HOME/.config/nvim
+    find . -type f -not -path '*/.git/*' -exec cp '{}' "$HOME/.config/nvim/{}" \;
+}
+
 handleFuse () {
     pushd $HOME/bin
     ./$1 --appimage-extract &> /dev/null
@@ -52,7 +58,7 @@ setAliases () {
     # ALIASES
     addIfNotExist "alias lg='lazygit'" "$HOME/.bashrc"
     addIfNotExist "alias tm='tmux new -t'" "$HOME/.bashrc"
-    addIfNotExist "alias tma='tmux attach -t'" "$HOME/.bashrc"
+    addIfNotExist "alias tma='tmux attach -d -t'" "$HOME/.bashrc"
     addIfNotExist "alias tml='tmux list-sessions'" "$HOME/.bashrc"
 }
 
@@ -94,6 +100,7 @@ installTmux () {
     if [ $HAS_FUSE -eq 0 ]; then
         handleFuse tmux
         addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
+	export TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo
     fi
     # check if git directory exists
     if [ -d $HOME/.tmux/plugins/tpm ]; then
@@ -178,19 +185,25 @@ checkCommand git
 checkCommand make
 checkCommand gcc
 
+if [ $# -eq 1 ]; then
+    if [ $1 == "--copy" ]; then
+        copyFiles
+        exit 0
+    fi
+fi
+
 checkIfInUse "$HOME/bin/tmux"
 checkIfInUse "$HOME/bin/nvim"
 
-HAS_FUSE=1
-if ! command -v fusermount &> /dev/null
-then
-    HAS_FUSE=0
-    echo "Proceding without fuse"
-fi
+HAS_FUSE=0
+# if ! command -v fusermount &> /dev/null
+# then
+#     HAS_FUSE=0
+#     echo "Proceding without fuse"
+# fi
 
 # Copy config in
-mkdir -p $HOME/.config/nvim
-find . -type f -not -path '*/.git/*' -exec cp '{}' "$HOME/.config/nvim/{}" \;
+copyFiles
 
 # Set bashrc if its not set in bash_profile
 if [ ! -f $HOME/.bash_profile ]; then

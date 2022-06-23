@@ -24,3 +24,16 @@ nmap <leader>g <cmd>Telescope live_grep<cr>
 nmap <leader>m <cmd>Telescope marks<cr>
 " Close file
 nmap <leader>q :Bdelete<cr>
+
+" Better split resizing
+noremap <silent> <C-S-Left> :vertical resize +1<CR>
+noremap <silent> <C-S-Right> :vertical resize -1<CR>
+noremap <silent> <C-S-Up> :horizontal resize +1<CR>
+noremap <silent> <C-S-Down> :horizontal resize -1<CR>
+
+" Use sessions automatically on start
+let g:prosession_on_startup = 1
+noremap <leader>p :Prosession<cr>
+
+" Enable focus automatic pane/split management
+lua require("focus").setup()

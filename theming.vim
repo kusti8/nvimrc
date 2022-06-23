@@ -7,7 +7,7 @@ set signcolumn=auto
 " set only one status bar for all vim
 set laststatus=3
 
-set cmdheight=0
+set cmdheight=1
 
 " set number of colors in terminal
 set t_Co=256
@@ -20,11 +20,19 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='nord_minimal'
 " only show filename in titlebar
 let g:airline#extensions#tabline#fnamemod = ':t'
+" Show if we are in a session in the status line
+let g:airline#extensions#obsession#indicator_text = 'SESSION'
 
 " Set rainbow brackets
 let g:rainbow_active = 1
 " Show indent guides
 let g:indent_guides_enable_on_vim_startup = 1
+
+" let g:tpipeline_embedopts = ['status-right $status_right#(~/.tmux/plugins/tmux-continuum/scripts/continuum_save.sh)']
+let g:tpipeline_autoembed = 0
+
+" scrollbar opacity
+let g:scrollview_winblend = 25
 
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
