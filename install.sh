@@ -109,14 +109,8 @@ installTmux () {
         addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
 	export TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo
     fi
-    # check if git directory exists
-    if [ -d $HOME/.tmux/plugins/tpm ]; then
-        pushd $HOME/.tmux/plugins/tpm
-        git pull
-        popd
-    else
-        git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
-    fi
+    rm -rf $HOME/.tmux/plugins/*
+    git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh
     ~/.tmux/plugins/tpm/scripts/update_plugin.sh all
 }
