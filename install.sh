@@ -45,11 +45,16 @@ copyFiles () {
 }
 
 handleFuse () {
-    pushd $HOME/bin
+    cp $HOME/bin/$1 /tmp/$1
+    pushd /tmp
     ./$1 --appimage-extract &> /dev/null
     rm -rf "$1-root"
     mv squashfs-root "$1-root/"
     rm ./$1
+    cp -r "$1-root/" "$HOME/bin/$1-root/"
+    popd
+    pushd $HOME/bin
+    rm -rf ./$1
     ln -s $(pwd)/"$1-root"/usr/bin/$1 "$(pwd)/$1" 
     popd
 }
@@ -84,6 +89,7 @@ setUtf8() {
 
 
 installNvim () {
+    rm -rf $HOME/bin/nvim $HOME/bin/nvim-root
     curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
     chmod +x $HOME/bin/nvim
     addIfNotExist "alias vim='nvim'" "$HOME/.bashrc"
@@ -93,6 +99,7 @@ installNvim () {
 }
 
 installTmux () {
+    rm -rf $HOME/bin/tmux $HOME/bin/tmux-root
     curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
     chmod +x $HOME/bin/tmux
     rm -f $HOME/.tmux.conf
