@@ -70,7 +70,7 @@ Plug 'beauwilliams/focus.nvim'
 
 " Navigating
 " Allow jumping between vim and tmux
-Plug 'christoomey/vim-tmux-navigator'
+Plug 'kusti8/vim-tmux-navigator'
 " Navigate using f key through entire file
 Plug 'ggandor/leap.nvim'
 " Use floating terminal inside vim
