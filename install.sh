@@ -23,6 +23,28 @@ checkCommand () {
     fi
 }
 
+checkCCompilerExists() {
+    if ! command -v gcc &> /dev/null
+    then
+        if ! command -v clang &> /dev/null
+        then
+            echo "C Compiler could not be found"
+            exit
+        fi
+    fi
+}
+
+checkCppCompilerExists() {
+    if ! command -v g++ &> /dev/null
+    then
+        if ! command -v clang++ &> /dev/null
+        then
+            echo "C++ Compiler could not be found"
+            exit
+        fi
+    fi
+}
+
 checkIfInUse () {
     # Check if a file is currently being executed
     if [ -n "$(lsof -t $1)" ]
@@ -87,28 +109,83 @@ setUtf8() {
     fi
 }
 
-
-installNvim () {
-    rm -rf $HOME/bin/nvim $HOME/bin/nvim-root
-    curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
-    chmod +x $HOME/bin/nvim
-    addIfNotExist "alias vim='nvim'" "$HOME/.bashrc"
-    if [ $HAS_FUSE -eq 0 ]; then
-        handleFuse nvim
+queryPackageInstallMethod() {
+    echo "Manual method is recommended for linux 64bit, brew sudo
+    for mac or where you have sudo access, and brew nonsudo as a last resort"
+    read -p "Install method (m)anual/(b)rew sudo/brew (n)onsudo:" method
+    
+    if [[ "$method" == "m" ]]; then
+        installPackagesManual
+    elif [[ "$method" == "b" ]]; then
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        addIfNotExist 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' $HOME/.bashrc
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        installPackagesHomebrew
+    elif [[ "$method" == "n" ]]; then
+        checkCppCompilerExists
+        git clone https://github.com/Homebrew/brew ~/.brew
+        eval "$(~/.brew/bin/brew shellenv)"
+        addIfNotExist 'eval "$(~/.brew/bin/brew shellenv)"' "$HOME/.bashrc"
+        brew update --force --quiet
+        checkCommand g++
+        installPackagesHomebrew
+    else
+        echo "Invalid method"
+        exit 1
     fi
 }
 
-installTmux () {
+installPackagesHomebrew() {
+    brew install neovim
+    brew install tmux
+    brew install rg
+    brew install lazygit
+    brew install fd
+    brew install oh-my-posh
+}
+
+installPackagesManual() {
+    # nvim
+    rm -rf $HOME/bin/nvim $HOME/bin/nvim-root
+    curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
+    chmod +x $HOME/bin/nvim
+
+    # tmux
     rm -rf $HOME/bin/tmux $HOME/bin/tmux-root
     curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
     chmod +x $HOME/bin/tmux
-    rm -f $HOME/.tmux.conf
-    ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
+
+    #ripgrep
+    curl -fLo $HOME/bin/rg $RELEASE_URL/rg
+    chmod +x $HOME/bin/rg
+
+    #lazygit
+    curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
+    chmod +x $HOME/bin/lazygit
+
+    #fd
+    curl -fLo $HOME/bin/fd $RELEASE_URL/fd
+    chmod +x $HOME/bin/fd
+
+    #oh-my-posh
+    curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
+    chmod +x $HOME/bin/oh-my-posh
+
     if [ $HAS_FUSE -eq 0 ]; then
+        handleFuse nvim
         handleFuse tmux
         addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
-	export TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo
+        export TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo
     fi
+}
+
+installNvim () {
+    addIfNotExist "alias vim='nvim'" "$HOME/.bashrc"
+}
+
+installTmux () {
+    rm -f $HOME/.tmux.conf
+    ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
     rm -rf $HOME/.tmux/plugins/*
     git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh
@@ -125,25 +202,16 @@ installFzf () {
 }
 
 installRg () {
-    curl -fLo $HOME/bin/rg $RELEASE_URL/rg
-    chmod +x $HOME/bin/rg
+    echo "Installed rg"
 }
 
 installLazygit () {
-    curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
-    chmod +x $HOME/bin/lazygit
     mkdir -p $HOME/.config/lazygit
     ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
 }
 
 installFd () {
-    curl -fLo $HOME/bin/fd $RELEASE_URL/fd
-    chmod +x $HOME/bin/fd
-}
-
-installCodeminimap () {
-    curl -fLo $HOME/bin/code-minimap $RELEASE_URL/code-minimap
-    chmod +x $HOME/bin/code-minimap
+    echo "Installed fd"
 }
 
 installNode () {
@@ -164,13 +232,11 @@ installVimPlug () {
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
     fi
 
-    ~/bin/nvim --headless +PlugInstall +qall
-    ~/bin/nvim --headless --headless +"CocInstall -sync $extensions|qa"
+    nvim --headless +PlugInstall +qall
+    nvim --headless --headless +"CocInstall -sync $extensions|qa"
 }
 
 installOhMyPosh () {
-    curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
-    chmod +x $HOME/bin/oh-my-posh
     mkdir -p $HOME/.poshthemes
     curl -fLo $HOME/.poshthemes/themes.tar.gz $RELEASE_URL/themes.tar.gz
     tar xf $HOME/.poshthemes/themes.tar.gz -C $HOME/.poshthemes
@@ -184,7 +250,7 @@ installOhMyPosh () {
 checkCommand curl
 checkCommand git
 checkCommand make
-checkCommand gcc
+checkCCompilerExists
 
 if [ $# -eq 1 ]; then
     if [ $1 == "--copy" ]; then
@@ -216,12 +282,12 @@ setAliases
 prepHomeBin
 setUtf8
 
+queryPackageInstallMethod
 installNvim
 installTmux
 installFzf
 installLazygit
 installFd
-installCodeminimap
 installNode
 installVimPlug
 installOhMyPosh
