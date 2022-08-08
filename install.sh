@@ -246,6 +246,10 @@ installOhMyPosh () {
     addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
 }
 
+installTldr () {
+    npm install -g tldr
+}
+
 
 checkCommand curl
 checkCommand git
@@ -291,6 +295,7 @@ installFd
 installNode
 installVimPlug
 installOhMyPosh
+installTldr
 
 yarn cache clean
 npm cache clean --force
