@@ -142,6 +142,7 @@ installPackagesHomebrew() {
     brew install lazygit
     brew install fd
     brew install oh-my-posh
+    brew install isacikgoz/taps/tldr
 }
 
 installPackagesManual() {
@@ -168,8 +169,12 @@ installPackagesManual() {
     chmod +x $HOME/bin/fd
 
     #oh-my-posh
-    curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
+    curl -fLo $HOME/bin/oh-my-posh $RELEASE_URL/posh-linux-amd64
     chmod +x $HOME/bin/oh-my-posh
+
+    # tldr++
+    curl -fLo $HOME/bin/tldr $RELEASE_URL/tldr
+    chmod +x $HOME/bin/tldr
 
     if [ $HAS_FUSE -eq 0 ]; then
         handleFuse nvim
@@ -247,7 +252,7 @@ installOhMyPosh () {
 }
 
 installTldr () {
-    npm install -g tldr
+    echo "Installed tldr"
 }
 
 
