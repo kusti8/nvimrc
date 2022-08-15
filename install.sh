@@ -167,7 +167,8 @@ installPackagesManual() {
 
     # tmux
     if [ $ARM -eq 1 ]; then
-	sudo snap install tmux-non-dead --classic
+        curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux-arm64
+        chmod +x $HOME/bin/tmux
     else
         rm -rf $HOME/bin/tmux $HOME/bin/tmux-root
         curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
