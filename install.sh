@@ -123,7 +123,9 @@ queryPackageInstallMethod() {
         installPackagesHomebrew
     elif [[ "$method" == "n" ]]; then
         checkCppCompilerExists
-        git clone https://github.com/Homebrew/brew ~/.brew
+	if [ ! -d "$HOME/.brew" ]; then
+            git clone https://github.com/Homebrew/brew ~/.brew
+	fi
         eval "$(~/.brew/bin/brew shellenv)"
         addIfNotExist 'eval "$(~/.brew/bin/brew shellenv)"' "$HOME/.bashrc"
         brew update --force --quiet
@@ -145,22 +147,46 @@ installPackagesHomebrew() {
 }
 
 installPackagesManual() {
+    ARM=0
+    if [[ $(uname -m) == "aarch64" ]]; then
+        if [[ $(uname) == "Linux" ]]; then
+            sudo apt install snapd
+	    ARM=1
+	fi
+    fi
+
     # nvim
-    rm -rf $HOME/bin/nvim $HOME/bin/nvim-root
-    curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
-    chmod +x $HOME/bin/nvim
+    if [ $ARM -eq 1 ]; then
+	sudo snap install nvim --classic
+    else
+        rm -rf $HOME/bin/nvim $HOME/bin/nvim-root
+        curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
+        chmod +x $HOME/bin/nvim
+    fi
 
     # tmux
-    rm -rf $HOME/bin/tmux $HOME/bin/tmux-root
-    curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
-    chmod +x $HOME/bin/tmux
+    if [ $ARM -eq 1 ]; then
+	sudo snap install tmux-non-dead --classic
+    else
+        rm -rf $HOME/bin/tmux $HOME/bin/tmux-root
+        curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
+        chmod +x $HOME/bin/tmux
+    fi
 
     #ripgrep
-    curl -fLo $HOME/bin/rg $RELEASE_URL/rg
+    if [ $ARM -eq 1 ]; then
+        curl -fLo $HOME/bin/rg $RELEASE_URL/rg-arm64
+    else
+        curl -fLo $HOME/bin/rg $RELEASE_URL/rg
+    fi
     chmod +x $HOME/bin/rg
 
     #lazygit
-    curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
+    if [ $ARM -eq 1 ]; then
+        curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit-arm64
+    else
+        curl -fLo $HOME/bin/lazygit $RELEASE_URL/lazygit
+    fi
     chmod +x $HOME/bin/lazygit
 
     #fd
@@ -168,10 +194,14 @@ installPackagesManual() {
     chmod +x $HOME/bin/fd
 
     #oh-my-posh
-    curl -fLo $HOME/bin/oh-my-posh https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
+    if [ $ARM -eq 1 ]; then
+        curl -fLo $HOME/bin/oh-my-posh $RELEASE_URL/posh-linux-arm64
+    else
+        curl -fLo $HOME/bin/oh-my-posh $RELEASE_URL/posh-linux-amd64
+    fi
     chmod +x $HOME/bin/oh-my-posh
 
-    if [ $HAS_FUSE -eq 0 ]; then
+    if [ $HAS_FUSE -eq 0 ] && [ $ARM -eq 0 ]; then
         handleFuse nvim
         handleFuse tmux
         addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
