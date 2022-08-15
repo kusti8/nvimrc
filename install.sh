@@ -144,6 +144,7 @@ installPackagesHomebrew() {
     brew install lazygit
     brew install fd
     brew install oh-my-posh
+    brew install isacikgoz/taps/tldr
 }
 
 installPackagesManual() {
@@ -190,7 +191,11 @@ installPackagesManual() {
     chmod +x $HOME/bin/lazygit
 
     #fd
-    curl -fLo $HOME/bin/fd $RELEASE_URL/fd
+    if [ $ARM -eq 1 ]; then
+        curl -fLo $HOME/bin/fd $RELEASE_URL/fd-arm64
+    else
+        curl -fLo $HOME/bin/fd $RELEASE_URL/fd
+    fi
     chmod +x $HOME/bin/fd
 
     #oh-my-posh
@@ -200,6 +205,14 @@ installPackagesManual() {
         curl -fLo $HOME/bin/oh-my-posh $RELEASE_URL/posh-linux-amd64
     fi
     chmod +x $HOME/bin/oh-my-posh
+
+    # tldr++
+    if [ $ARM -eq 1 ]; then
+        curl -fLo $HOME/bin/tldr $RELEASE_URL/tldr-arm64
+    else
+        curl -fLo $HOME/bin/tldr $RELEASE_URL/tldr
+    fi
+    chmod +x $HOME/bin/tldr
 
     if [ $HAS_FUSE -eq 0 ] && [ $ARM -eq 0 ]; then
         handleFuse nvim
@@ -276,6 +289,10 @@ installOhMyPosh () {
     addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
 }
 
+installTldr () {
+    echo "Installed tldr"
+}
+
 
 checkCommand curl
 checkCommand git
@@ -321,6 +338,7 @@ installFd
 installNode
 installVimPlug
 installOhMyPosh
+installTldr
 
 yarn cache clean
 npm cache clean --force
