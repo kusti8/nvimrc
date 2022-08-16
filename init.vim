@@ -83,6 +83,8 @@ Plug 'dstein64/nvim-scrollview'
 Plug 'jez/vim-better-sml'
 " Syntax highlighting for multiple files
 Plug 'sheerun/vim-polyglot'
+" Markdown preview
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 call plug#end()
 
 " set the filetype for a file, load the filetype plugin and indent file

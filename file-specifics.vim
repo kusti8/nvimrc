@@ -1,6 +1,8 @@
 """""""""""""" VERILOG """"""""""""""
 " set tab width of 2 for verilog
 autocmd FileType systemverilog setlocal shiftwidth=2 softtabstop=2 expandtab
+"""""""""""""" Markdown """"""""""""""
+nmap <leader>z <Plug>MarkdownPreviewToggle
 """""""""""""" SML """"""""""""""
 " better sml support
 augroup vimbettersml
