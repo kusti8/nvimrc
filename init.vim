@@ -77,6 +77,8 @@ Plug 'ggandor/leap.nvim'
 Plug 'voldikss/vim-floaterm'
 " Show a scrollbar
 Plug 'dstein64/nvim-scrollview'
+" Smooth scrolling
+Plug 'karb94/neoscroll.nvim'
 
 " File specific
 " SML suppott

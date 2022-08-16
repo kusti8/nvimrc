@@ -25,3 +25,6 @@ let g:minimap_highlight_range = 1
 " vim-tmux-navigator
 " Save all buffers when switching
 let g:tmux_navigator_save_on_switch = 2
+
+" Smooth scrolling
+lua require('neoscroll').setup()
