@@ -120,3 +120,6 @@ Go to previous floating terminal                        | <leader>tp
 
 ## multi-file @views @panes @session
 Save layout or session                                  | <leader>p
+
+## markdown-preview @markdown
+Toggle markdown preview                                 | <leader>z
