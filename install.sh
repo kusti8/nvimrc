@@ -63,7 +63,12 @@ addIfNotExist () {
 
 copyFiles () {
     mkdir -p $HOME/.config/nvim
-    find . -type f -not -path '*/.git/*' -exec cp '{}' "$HOME/.config/nvim/{}" \;
+    # iterate over vim files and symlink them
+    for file in *.vim "powerline.bash" "cheatsheet.txt" "coc-settings.json"
+    do
+        ln -sf $PWD/$file $HOME/.config/nvim/$file
+    done
+    # find . -type f -not -path '*/.git/*' -exec cp '{}' "$HOME/.config/nvim/{}" \;
 }
 
 handleFuse () {
@@ -79,14 +84,6 @@ handleFuse () {
     rm -rf ./$1
     ln -s $(pwd)/"$1-root"/usr/bin/$1 "$(pwd)/$1" 
     popd
-}
-
-setAliases () {
-    # ALIASES
-    addIfNotExist "alias lg='lazygit'" "$HOME/.bashrc"
-    addIfNotExist "alias tm='tmux new -t'" "$HOME/.bashrc"
-    addIfNotExist "alias tma='tmux attach -d -t'" "$HOME/.bashrc"
-    addIfNotExist "alias tml='tmux list-sessions'" "$HOME/.bashrc"
 }
 
 prepHomeBin () {
@@ -218,18 +215,23 @@ installPackagesManual() {
     if [ $HAS_FUSE -eq 0 ] && [ $ARM -eq 0 ]; then
         handleFuse nvim
         handleFuse tmux
-        addIfNotExist "alias tmux='TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
+        addIfNotExist "alias tmux='TERMINFO=~/bin/tmux-root/usr/lib/terminfo tmux'" "$HOME/.bashrc"
         export TERMINFO=$HOME/bin/tmux-root/usr/lib/terminfo
     fi
 }
 
+installBash () {
+    ln -sf $PWD/.my_bashrc $HOME/.my_bashrc
+    addIfNotExist "source ~/.my_bashrc" "$HOME/.bashrc"
+}
+
 installNvim () {
-    addIfNotExist "alias vim='nvim'" "$HOME/.bashrc"
+    echo "Installed nvim"
 }
 
 installTmux () {
     rm -f $HOME/.tmux.conf
-    ln -sf $HOME/.config/nvim/.tmux.conf $HOME/.tmux.conf
+    ln -sf $PWD/.tmux.conf $HOME/.tmux.conf
     rm -rf $HOME/.tmux/plugins/*
     git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
     ~/.tmux/plugins/tpm/scripts/install_plugins.sh
@@ -251,7 +253,7 @@ installRg () {
 
 installLazygit () {
     mkdir -p $HOME/.config/lazygit
-    ln -sf $HOME/.config/nvim/config.yml $HOME/.config/lazygit/config.yml
+    ln -sf $PWD/config.yml $HOME/.config/lazygit/config.yml
 }
 
 installFd () {
@@ -286,8 +288,6 @@ installOhMyPosh () {
     tar xf $HOME/.poshthemes/themes.tar.gz -C $HOME/.poshthemes
     chmod u+rw $HOME/.poshthemes/*.json
     rm $HOME/.poshthemes/themes.tar.gz
-
-    addIfNotExist "source $HOME/.config/nvim/powerline.bash" "$HOME/.bashrc"
 }
 
 installTldr () {
@@ -326,8 +326,8 @@ if [ ! -f $HOME/.bash_profile ]; then
 fi
 
 
-setAliases
 prepHomeBin
+installBash
 setUtf8
 
 queryPackageInstallMethod

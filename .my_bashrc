@@ -1,0 +1,18 @@
+export HISTCONTROL=erasedups
+export HISTSIZE=20000000
+export HISTFILESIZE=20000000
+HISTIGNORE='ls:ll:ls -alh:pwd:clear:history:lg:nvim'
+HISTTIMEFORMAT='%F %T '
+shopt -s histappend
+shopt -s cmdhist
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+source ~/.config/nvim/powerline.bash
+export PATH="$HOME/bin:$PATH"
+
+# aliases
+alias lg='lazygit'
+alias tm='tmux new -t'
+alias tma='tmux attach -d -t'
+alias tml='tmux list-sessions'
+alias vim='nvim'
