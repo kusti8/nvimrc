@@ -1,4 +1,4 @@
-export HISTCONTROL=erasedups
+export HISTCONTROL=ignoreboth:erasedups
 export HISTSIZE=20000000
 export HISTFILESIZE=20000000
 HISTIGNORE='ls:ll:ls -alh:pwd:clear:history:lg:nvim'
