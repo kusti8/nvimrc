@@ -106,6 +106,15 @@ setUtf8() {
     fi
 }
 
+installFont() {
+    if ! command -v fc-cache &> /dev/null
+    then
+        mkdir -p ~/.local/share/fonts
+        cp 'Caskaydia Cove Nerd Font Complete Mono.ttf' ~/.local/share/fonts
+        fc-cache -f -v
+    fi
+}
+
 queryPackageInstallMethod() {
     echo "Manual method is recommended for linux 64bit, brew sudo
     for mac or where you have sudo access, and brew nonsudo as a last resort"
@@ -329,6 +338,7 @@ fi
 prepHomeBin
 installBash
 setUtf8
+installFont
 
 queryPackageInstallMethod
 installNvim
