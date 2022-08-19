@@ -112,6 +112,8 @@ installFont() {
         mkdir -p ~/.local/share/fonts
         cp 'Caskaydia Cove Nerd Font Complete Mono.ttf' ~/.local/share/fonts
         fc-cache -f -v
+        mkdir -p ~/.local/share/konsole
+        ln -s $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
     fi
 }
 
