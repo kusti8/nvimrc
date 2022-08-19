@@ -109,12 +109,14 @@ setUtf8() {
 installFont() {
     if ! command -v fc-cache &> /dev/null
     then
+        echo "Not installing font"
+    else
         mkdir -p ~/.local/share/fonts
         cp 'Caskaydia Cove Nerd Font Complete Mono.ttf' ~/.local/share/fonts
         fc-cache -f -v
-        mkdir -p ~/.local/share/konsole
-        ln -s $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
     fi
+    mkdir -p ~/.local/share/konsole
+    ln -s $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
 }
 
 queryPackageInstallMethod() {
