@@ -10,6 +10,8 @@ Plug 'liuchengxu/vista.vim'
 Plug 'tpope/vim-fugitive'
 " Allow using coc in telescope
 Plug 'fannheyward/telescope-coc.nvim'
+" Resolve mergeconflicts in vim
+Plug 'akinsho/git-conflict.nvim'
 
 " Theming
 " Status line

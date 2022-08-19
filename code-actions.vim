@@ -16,3 +16,5 @@ nmap <F3> :Autoformat<cr>
 nmap <silent> gd <Plug>(coc-definition)
 " See description of of all symbols
 nmap <leader>v :Vista coc<cr>
+
+lua require('git-conflict').setup()
