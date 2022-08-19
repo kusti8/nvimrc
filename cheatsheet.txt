@@ -33,6 +33,14 @@ Paste without copying                                   | <leader>p
 ## commentary @commenting
 Toggle comment out something                            | gc
 
+## git-confict @merge @conflicts
+Choose our changes                                      | co
+Choose their changes                                    | ct
+Choose both changes                                     | cb
+Choose no changes                                       | c0
+Move to previous conflict                               | ]x
+Move to next conflict                                   | [x
+
 ## tree @filebrowser @files
 Open a file or folder                                   | o
 Open a file or folder (no window picker)                | O
