@@ -127,9 +127,12 @@ queryPackageInstallMethod() {
     if [[ "$method" == "m" ]]; then
         installPackagesManual
     elif [[ "$method" == "b" ]]; then
-        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        addIfNotExist 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' $HOME/.bashrc
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        if ! command -v brew &> /dev/null
+        then
+            NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            addIfNotExist 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' $HOME/.bashrc
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        fi
         installPackagesHomebrew
     elif [[ "$method" == "n" ]]; then
         checkCppCompilerExists
