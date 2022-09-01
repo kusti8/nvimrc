@@ -116,7 +116,7 @@ installFont() {
         fc-cache -f -v
     fi
     mkdir -p ~/.local/share/konsole
-    ln -s $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
+    ln -sf $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
 }
 
 queryPackageInstallMethod() {
