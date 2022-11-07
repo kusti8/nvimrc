@@ -82,7 +82,7 @@ handleFuse () {
     popd
     pushd $HOME/bin
     rm -rf ./$1
-    ln -s $(pwd)/"$1-root"/usr/bin/$1 "$(pwd)/$1" 
+    ln -sf $(pwd)/"$1-root"/usr/bin/$1 "$(pwd)/$1" 
     popd
 }
 
@@ -116,7 +116,7 @@ installFont() {
         fc-cache -f -v
     fi
     mkdir -p ~/.local/share/konsole
-    ln -s $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
+    ln -sf $PWD/nord.colorscheme $HOME/.local/share/konsole/nord.colorscheme
 }
 
 queryPackageInstallMethod() {
@@ -170,7 +170,8 @@ installPackagesManual() {
     if [ $ARM -eq 1 ]; then
 	sudo snap install nvim --classic
     else
-        rm -rf $HOME/bin/nvim $HOME/bin/nvim-root
+        rm -rf $HOME/bin/nvim
+	rm -rf $HOME/bin/nvim-root
         curl -fLo $HOME/bin/nvim $RELEASE_URL/nvim.appimage
         chmod +x $HOME/bin/nvim
     fi
@@ -180,7 +181,8 @@ installPackagesManual() {
         curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux-arm64
         chmod +x $HOME/bin/tmux
     else
-        rm -rf $HOME/bin/tmux $HOME/bin/tmux-root
+        rm -rf $HOME/bin/tmux
+	rm -rf $HOME/bin/tmux-root
         curl -fLo $HOME/bin/tmux $RELEASE_URL/tmux.appimage
         chmod +x $HOME/bin/tmux
     fi
