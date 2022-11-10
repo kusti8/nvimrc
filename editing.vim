@@ -24,3 +24,8 @@ lua << EOF
     vim.wo.foldenable = true
     require('ufo').setup()
 EOF
+
+" setup git-conflict
+lua << EOF
+    require('git-conflict').setup()
+EOF

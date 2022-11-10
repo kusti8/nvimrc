@@ -54,6 +54,8 @@ Plug 'romainl/vim-cool'
 " Use folding/collapse things
 Plug 'kevinhwang91/promise-async'
 Plug 'kevinhwang91/nvim-ufo'
+" git-conflict for merge conflicts
+Plug 'akinsho/git-conflict.nvim'
 
 " Multi-file
 " Show file tree
