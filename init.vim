@@ -62,7 +62,7 @@ Plug 'akinsho/git-conflict.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
 " Telescope setup to search
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 " Add automatic session management
 Plug 'tpope/vim-obsession'
