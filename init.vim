@@ -1,7 +1,7 @@
 call plug#begin()
 " Code actions
 " autocomplete
-Plug 'neoclide/coc.nvim', {'branch': 'master', 'tag': 'v0.0.81', 'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'tag': 'v0.0.82', 'do': 'yarn install --frozen-lockfile'}
 " copilot
 Plug 'github/copilot.vim'
 " Show outline of symbols
